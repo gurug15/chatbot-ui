@@ -1,16 +1,21 @@
+"use client"
 import ChatSidebar from "@/components/chatbot"
+import { useMolstar } from "@/hooks/useMolstar"
+import { useRef } from "react"
 
 export default function Page() {
+  const parentRef = useRef<HTMLDivElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const {} = useMolstar(canvasRef, parentRef)
   return (
-    <div className="flex h-screen w-screen overflow-hidden">
+    <div className="flex h-full w-full overflow-hidden">
       {/* ── Left: main content area (4/5) ─────────────────────────── */}
-      <main className="flex flex-1 flex-col overflow-y-auto p-8">
-        {/* Replace everything below with whatever you want */}
-        <h1 className="text-3xl font-bold tracking-tight">Your App</h1>
-        <p className="mt-2 text-muted-foreground">
-          Put anything you want here — dashboards, docs, tables, forms…
-        </p>
-      </main>
+      <div ref={parentRef} className="flex flex-1 flex-col overflow-y-auto">
+        <canvas
+          ref={canvasRef}
+          // className="w-full flex-1 rounded-lg border bg-white"
+        />
+      </div>
 
       {/* ── Right: chat sidebar (1/5) ──────────────────────────────── */}
       <div className="w-1/5 min-w-[240px] shrink-0">

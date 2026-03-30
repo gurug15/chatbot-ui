@@ -47,7 +47,6 @@ export const useModel = async () => {
         return updated
       })
     } finally {
-      setIsLoadin g(false)
     }
   }
 }
