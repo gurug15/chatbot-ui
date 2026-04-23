@@ -210,6 +210,8 @@ export const useMolstar = (
           setAtomcount(structures1[0].obj.data.elementCount)
         }
       }
+      await plugin.builders.structure.hierarchy.applyPreset(topology, "default")
+      plugin.managers.camera.reset()
       // Filter and set representation types first
       const filteredTypes =
         plugin.representation.structure.registry.types.filter(
@@ -227,7 +229,6 @@ export const useMolstar = (
         const ref = models[0].transform.ref
         // console.log("all Structure loaded. Model ref:", ref);
         setModelRef(ref)
-
         // Extract and set atom count only once
 
         return ref // ← RETURN THE REF
