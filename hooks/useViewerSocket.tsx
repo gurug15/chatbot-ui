@@ -2,41 +2,55 @@ import { useEffect, useRef } from "react"
 
 export type ViewerCommand =
   | { type: "CHANGE_COLOR"; hexColor: string }
+  | { type: "CHANGE_BG_COLOR"; hexColor: string }
+  | { type: "CHANGE_REPRESENTATION"; representation: string }
+  | { type: "TOGGLE_SPIN" }
+  | { type: "RECENTER" }
+  | { type: "CHANGE_VIEW_MODE"; mode: "perspective" | "orthographic" }
+  | { type: "TOGGLE_STEREO" }
+  | { type: "FOCUS_ATOM"; atomNum: number }
+  | { type: "CLEAR" }
+  | { type: "TOGGLE_FULLSCREEN" }
 
 interface UseViewerSocketOptions {
   sessionId: string
   onCommand: (cmd: ViewerCommand) => void
 }
 
-export function useViewerSocket({ sessionId, onCommand }: UseViewerSocketOptions) {
+export function useViewerSocket({
+  sessionId,
+  onCommand,
+}: UseViewerSocketOptions) {
   const wsRef = useRef<WebSocket | null>(null)
 
   // Keep onCommand stable across renders without closing/reopening the socket
   const onCommandRef = useRef(onCommand)
-  useEffect(() => { onCommandRef.current = onCommand }, [onCommand])
+  useEffect(() => {
+    onCommandRef.current = onCommand
+  }, [onCommand])
 
   useEffect(() => {
     const ws = new WebSocket(`ws://localhost:5555/ws/${sessionId}`)
     wsRef.current = ws
 
     ws.onopen = () => {
-  console.log("[ViewerSocket] connected")
-  // @ts-ignore
-  window.__viewerWs = ws  // remove this after testing
-}
-
-   ws.onmessage = (event) => {
-  console.log("[ViewerSocket] raw message:", event.data)  // add this
-  try {
-    const msg = JSON.parse(event.data)
-    console.log("[ViewerSocket] parsed:", msg)  // add this
-    if (msg.type === "VIEWER_CMD") {
-      onCommandRef.current(msg.payload as ViewerCommand)
+      console.log("[ViewerSocket] connected")
+      // @ts-ignore
+      window.__viewerWs = ws // remove this after testing
     }
-  } catch (e) {
-    console.error("[ViewerSocket] parse error", e)
-  }
-}
+
+    ws.onmessage = (event) => {
+      console.log("[ViewerSocket] raw message:", event.data) // add this
+      try {
+        const msg = JSON.parse(event.data)
+        console.log("[ViewerSocket] parsed:", msg) // add this
+        if (msg.type === "VIEWER_CMD") {
+          onCommandRef.current(msg.payload as ViewerCommand)
+        }
+      } catch (e) {
+        console.error("[ViewerSocket] parse error", e)
+      }
+    }
 
     ws.onerror = (e) => console.error("[ViewerSocket] error", e)
     ws.onclose = () => console.log("[ViewerSocket] closed")

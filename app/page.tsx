@@ -10,16 +10,43 @@ export default function Page() {
 
   const { handlers, state } = useMolstar(canvasRef, parentRef)
 
-useViewerSocket({
-  sessionId: "user_1",
-  onCommand: (cmd) => {
-    console.log("[onCommand] received:", cmd)  // add this
-    if (cmd.type === "CHANGE_COLOR") {
-      console.log("[onCommand] calling color change:", cmd.hexColor)  // add this
-      handlers.onChangeStructureColor(cmd.hexColor)
-    }
-  },
-})
+  useViewerSocket({
+    sessionId: "user_1",
+    onCommand: (cmd) => {
+      switch (cmd.type) {
+        case "CHANGE_COLOR":
+          handlers.onChangeStructureColor(cmd.hexColor)
+          break
+        case "CHANGE_BG_COLOR":
+          handlers.onChangeBackgroundColor(cmd.hexColor)
+          break
+        case "CHANGE_REPRESENTATION":
+          handlers.onSetRepresentation(cmd.representation)
+          break
+        case "TOGGLE_SPIN":
+          handlers.onToggleSpin()
+          break
+        case "RECENTER":
+          handlers.onRecenterView()
+          break
+        case "CHANGE_VIEW_MODE":
+          handlers.onViewModeChange(cmd.mode)
+          break
+        case "TOGGLE_STEREO":
+          handlers.onToggleStereoView()
+          break
+        case "FOCUS_ATOM":
+          handlers.onFocusAtom(cmd.atomNum)
+          break
+        case "CLEAR":
+          handlers.onClear()
+          break
+        case "TOGGLE_FULLSCREEN":
+          handlers.onFullScreenToggle()
+          break
+      }
+    },
+  })
 
   useEffect(() => {
     if (!state.isPluginReady) return // ← wait for plugin
