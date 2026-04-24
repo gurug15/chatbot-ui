@@ -1,6 +1,7 @@
 "use client"
 import ChatSidebar from "@/components/chatbot"
 import { useMolstar } from "@/hooks/useMolstar"
+import { useViewerSocket } from "@/hooks/useViewerSocket"
 import { useEffect, useRef } from "react"
 
 export default function Page() {
@@ -8,6 +9,17 @@ export default function Page() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const { handlers, state } = useMolstar(canvasRef, parentRef)
+
+useViewerSocket({
+  sessionId: "user_1",
+  onCommand: (cmd) => {
+    console.log("[onCommand] received:", cmd)  // add this
+    if (cmd.type === "CHANGE_COLOR") {
+      console.log("[onCommand] calling color change:", cmd.hexColor)  // add this
+      handlers.onChangeStructureColor(cmd.hexColor)
+    }
+  },
+})
 
   useEffect(() => {
     if (!state.isPluginReady) return // ← wait for plugin

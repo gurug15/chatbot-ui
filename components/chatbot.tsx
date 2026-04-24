@@ -159,6 +159,7 @@ function MessageBubble({
 export default function ChatSidebar() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
+  const inputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false)
   const [awaitingInterrupt, setAwaitingInterrupt] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
@@ -297,6 +298,15 @@ export default function ChatSidebar() {
     }
   }
 
+
+  useEffect(()=>{
+    if(!isLoading && !awaitingInterrupt){
+
+      inputRef.current?.focus();
+    }
+
+  },[isLoading,awaitingInterrupt])
+
   // ── Render ─────────────────────────────────────────────────────────────────
 
   const inputBlocked = isLoading || awaitingInterrupt
@@ -363,6 +373,7 @@ export default function ChatSidebar() {
       <div className="flex shrink-0 items-center gap-2 border-t px-3 py-2.5 sm:px-4">
         <input
           value={input}
+          ref={inputRef}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={awaitingInterrupt ? "Waiting for approval…" : "Message…"}
