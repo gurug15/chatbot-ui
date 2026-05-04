@@ -72,7 +72,7 @@ export default function Page() {
       </div>
 
       {/* ── Right: chat sidebar (1/5) ──────────────────────────────── */}
-      <div className="w-1/5 min-w-[240px] shrink-0">
+      <div className="w-1/5 min-w-60 shrink-0">
         <ChatSidebar />
       </div>
     </div>

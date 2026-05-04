@@ -109,7 +109,7 @@ function MessageBubble({
         </div>
         <div className="flex min-w-0 flex-col gap-2">
           {message.content && (
-            <div className="max-w-[85vw] rounded-2xl rounded-tl-sm bg-muted px-3 py-2 text-sm leading-relaxed break-words text-foreground sm:max-w-[75%]">
+            <div className="max-w-[85vw] rounded-2xl rounded-tl-sm bg-muted px-3 py-2 text-sm leading-relaxed wrap-break-word text-foreground sm:max-w-[75%]">
               {message.content}
             </div>
           )}
@@ -140,7 +140,7 @@ function MessageBubble({
         className={cn(
           // Responsive max-width: tighter on mobile, wider on desktop
           "max-w-[80vw] min-w-0 sm:max-w-[70%] lg:max-w-[60%]",
-          "rounded-2xl px-3 py-2 text-sm leading-relaxed break-words whitespace-pre-wrap",
+          "wrap-break-words rounded-2xl px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap",
           isUser
             ? "rounded-tr-sm bg-blue-600 text-white"
             : "rounded-tl-sm bg-muted text-foreground"
@@ -159,7 +159,7 @@ function MessageBubble({
 export default function ChatSidebar() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [awaitingInterrupt, setAwaitingInterrupt] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
@@ -298,14 +298,11 @@ export default function ChatSidebar() {
     }
   }
 
-
-  useEffect(()=>{
-    if(!isLoading && !awaitingInterrupt){
-
-      inputRef.current?.focus();
+  useEffect(() => {
+    if (!isLoading && !awaitingInterrupt) {
+      inputRef.current?.focus()
     }
-
-  },[isLoading,awaitingInterrupt])
+  }, [isLoading, awaitingInterrupt])
 
   // ── Render ─────────────────────────────────────────────────────────────────
 
